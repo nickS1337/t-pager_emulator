@@ -1,0 +1,14 @@
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/bin/Debug/net10.0/CustomProgram
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/bin/Debug/net10.0/CustomProgram.deps.json
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/bin/Debug/net10.0/CustomProgram.runtimeconfig.json
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/bin/Debug/net10.0/CustomProgram.dll
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/bin/Debug/net10.0/CustomProgram.pdb
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.GeneratedMSBuildEditorConfig.editorconfig
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.AssemblyInfoInputs.cache
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.AssemblyInfo.cs
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.csproj.CoreCompileInputs.cache
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.dll
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/refint/CustomProgram.dll
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.pdb
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/CustomProgram.genruntimeconfig.cache
+/home/nicholas/Desktop/SWINBURNE/cos20007_2026_Object-Oriented-Programming/CustomProgram/obj/Debug/net10.0/ref/CustomProgram.dll
