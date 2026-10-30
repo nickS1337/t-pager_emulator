@@ -74,20 +74,30 @@ class ListMenu : UIElement
 
     public void FocusPreviousElement()
     {
-        int nextItem = _SelectedItem + 1;
-        if (nextItem < _Items.Count)
+        int nextItem = _SelectedItem - 1;
+        //Console.WriteLine("PREV nextItem: " + nextItem + " _Items.Count: "+ _Items.Count);
+        if (nextItem < 0)
         {
-            nextItem = _Items.Count;
+            nextItem = _Items.Count-1;
+            //Console.WriteLine("nextItem<0: " + nextItem);
         }
+        _SelectedItem = nextItem;
     }
 
     public void FocusNextElement()
     {
         int nextItem = _SelectedItem + 1;
-        if (nextItem > _Items.Count)
+        //Console.WriteLine("NEXT nextItem: " + nextItem + " _Items.Count: "+ _Items.Count);
+        if (nextItem == _Items.Count || nextItem > _Items.Count)
         {
             nextItem = 0;
         }
+        _SelectedItem = nextItem;
+    }
+
+    public int SelectedOption()
+    {
+        return _SelectedItem;
     }
 
     public override void DrawElement() 

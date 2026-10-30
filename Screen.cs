@@ -2,7 +2,7 @@ using System;
 using SplashKitSDK;
 namespace CustomProgram;
 
-class Screen
+abstract class Screen
 {
 
     //The actual class to call when making a user interface
@@ -44,8 +44,8 @@ class Screen
 
         _TitleTop = new TitleTop(title);
         _ControlOptions = new ControlOptions();
-        _ControlOptions.AddOption("W", "UP");
-        _ControlOptions.AddOption("S", "DOWN");
+        _ControlOptions.AddOption("W", "PREVIOUS");
+        _ControlOptions.AddOption("S", "NEXT");
 
         // _ListMenu = new ListMenu();
         // _ListMenu.X = 20;
@@ -134,6 +134,17 @@ class Screen
             _UIElements[i].DrawElement();
         }
 
+    }
+
+    public abstract void KeyboardEvents(int key);
+
+    //Event for when a screen change is requested
+    public event Action<int>? ScreenRequested;
+
+    protected void RequestScreen(int nextScreen)
+    {
+        // Invoke subscribers only if someone is listening.
+        ScreenRequested?.Invoke(nextScreen);
     }
 
 }

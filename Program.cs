@@ -16,7 +16,6 @@ class Program
         SCREEN_MUSIC_PLAYLIST
     };
 
-
     static void Main(string[] args)
     {
 
@@ -28,6 +27,26 @@ class Program
 
         Screen CurrentScreen = new HomeScreen();
         // Screen_v1 CurrentScreen = new Screen_v1();
+
+        SplashKit.RegisterCallbackOnKeyTyped(CurrentScreen.KeyboardEvents);
+
+        void ChangeScreen(int req)
+        {
+
+            Console.WriteLine("Screen change requested: " + req);
+
+            SCREEN_STATE requestedScreen = (SCREEN_STATE)req;
+
+            switch (requestedScreen)
+            {
+                case SCREEN_STATE.SCREEN_MUSIC_LIBRARY:
+                break;
+            }
+
+        }
+
+        //Subscribe to screen change requests
+        CurrentScreen.ScreenRequested += ChangeScreen;
 
         do
         {
