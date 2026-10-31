@@ -15,9 +15,9 @@ class HomeScreen : Screen
         NewElement(UI_ELEMENT.UI_LISTMENU, "List");
         ListMenu _ListMenu = Element<ListMenu>("List");
         
-        _ListMenu.AddItem("Music", "Music player");
-        _ListMenu.AddItem("Notes", "New Notes editor");
-        _ListMenu.AddItem("Files", "Browse files");
+        _ListMenu.AddItem("Music library", "SCREEN_MUSIC_LIBRARY");
+        _ListMenu.AddItem("New Notes editor", "SCREEN_NOTES_EDITOR");
+        _ListMenu.AddItem("Browse files", "SCREEN_FILE_SYSTEM");
 
     }
 
@@ -46,8 +46,12 @@ class HomeScreen : Screen
             case KeyCode.ReturnKey:
             {
                 //Element<ListMenu>("List").FocusNextElement();
-                int selected = Element<ListMenu>("List").SelectedOption();
-                Console.WriteLine("Selected item: " + selected);
+                String selected = Element<ListMenu>("List").SelectedOption();
+                //Console.WriteLine("Selected item: " + selected);
+                // if (Enum.TryParse<SCREEN_STATE>(screenName, out SCREEN_STATE screen))
+                // {
+                //     ChangeScreen(screen);
+                // }
                 RequestScreen(selected);
                 break;
             }

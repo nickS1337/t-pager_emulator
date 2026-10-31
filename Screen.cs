@@ -69,8 +69,19 @@ abstract class Screen
             case UI_ELEMENT.UI_LISTMENU:
             {
 
-                Console.WriteLine("Requested new UI_LISTMENU in Screen " + UITitle);
+                //Console.WriteLine("Requested new UI_LISTMENU in Screen " + UITitle);
                 item = new ListMenu();
+                item.ElementID = element_id;
+                item.X = _ElementInitX;
+                item.Y = _ElementInitY;
+                _UIElements.Add(item);
+                _ElementInitY += item.Height;
+                break;
+            }
+
+            case UI_ELEMENT.UI_TABLE:
+            {
+                item = new Table();
                 item.ElementID = element_id;
                 item.X = _ElementInitX;
                 item.Y = _ElementInitY;
@@ -139,9 +150,9 @@ abstract class Screen
     public abstract void KeyboardEvents(int key);
 
     //Event for when a screen change is requested
-    public event Action<int>? ScreenRequested;
+    public event Action<String>? ScreenRequested;
 
-    protected void RequestScreen(int nextScreen)
+    protected void RequestScreen(String nextScreen)
     {
         // Invoke subscribers only if someone is listening.
         ScreenRequested?.Invoke(nextScreen);

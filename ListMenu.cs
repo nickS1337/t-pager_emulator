@@ -26,7 +26,7 @@ class ListMenu : UIElement
         
         Title = "ListMenu";
 
-        Console.WriteLine("_ListItemHeight: "+ _ListItemHeight +", TextPadding: " + TextPadding);
+        //Console.WriteLine("_ListItemHeight: "+ _ListItemHeight +", TextPadding: " + TextPadding);
 
     }
 
@@ -64,7 +64,7 @@ class ListMenu : UIElement
         
         //Then draw the text:
         SplashKit.DrawText(
-            Item.Value,
+            Item.Key,
             textColor, FontName, TextSize,
             X+TextPadding,
             ItemY+TextPadding/2
@@ -95,9 +95,9 @@ class ListMenu : UIElement
         _SelectedItem = nextItem;
     }
 
-    public int SelectedOption()
+    public String SelectedOption()
     {
-        return _SelectedItem;
+        return _Items[_SelectedItem].Value;
     }
 
     public override void DrawElement() 
