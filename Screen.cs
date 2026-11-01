@@ -140,9 +140,18 @@ abstract class Screen
         _ControlOptions.DrawElement();
         //_ListMenu.DrawElement();
 
+        int elementX = _ElementInitX;
+        int elementY = _ElementInitY;
+
         for (int i = 0; i < _UIElements.Count; i++)
         {
+
+            Console.WriteLine("Drawing " + _UIElements[i].ElementID + " at Y:" + _UIElements[i].Y);
+            _UIElements[i].Y = elementY;
             _UIElements[i].DrawElement();
+
+            elementY += _UIElements[i].Height;
+
         }
 
     }

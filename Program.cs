@@ -29,8 +29,6 @@ class Program
         SCREEN_STATE ActiveScreen = SCREEN_STATE.SCREEN_HOME;
         // Screen_v1 CurrentScreen = new Screen_v1();
 
-        SplashKit.RegisterCallbackOnKeyTyped(CurrentScreen.KeyboardEvents);
-
         // void ChangeScreen(String requestedScreen)
         // {
 
@@ -99,6 +97,11 @@ class Program
             //Subscribe to navigation requests from the new screen
             CurrentScreen.ScreenRequested += ChangeScreen;
         }
+
+        SplashKit.RegisterCallbackOnKeyTyped(k =>
+        {
+            CurrentScreen.KeyboardEvents(k);
+        });
 
         //Subscribe to screen change requests
         CurrentScreen.ScreenRequested += ChangeScreen;
