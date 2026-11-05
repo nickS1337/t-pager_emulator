@@ -25,7 +25,9 @@ abstract class UIElement {
         _TextPadding = 2;
         _TextSize = 12;
         TextHeight = SplashKit.TextHeight("A", FontName, TextSize);
-        // Console.WriteLine("Height: " + Height + ", TextHeight: " + TextHeight);
+        Console.WriteLine("Element:"+_ElementID+", Height: " + Height + ", TextHeight: " + TextHeight + " X: " + X +", Y: "+ Y);
+            //Console.WriteLine("TitleTop (UI_TITLETOP) Height: " + Height + ", TextHeight: " + TextHeight + " X: " + X +", Y: "+ Y);
+
     }
 
     public String Title {

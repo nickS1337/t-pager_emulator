@@ -18,6 +18,7 @@ class HomeScreen : Screen
         _ListMenu.AddItem("Music library", "SCREEN_MUSIC_LIBRARY");
         _ListMenu.AddItem("New Notes editor", "SCREEN_NOTES_EDITOR");
         _ListMenu.AddItem("Browse files", "SCREEN_FILE_SYSTEM");
+        _ListMenu.AddItem("Browse maps", "SCREEN_MAPS");
 
     }
 

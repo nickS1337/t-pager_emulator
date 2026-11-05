@@ -13,7 +13,8 @@ class Program
         SCREEN_FILE_SYSTEM,
         SCREEN_NOTES_EDITOR,
         SCREEN_MUSIC_LIBRARY,
-        SCREEN_MUSIC_PLAYLIST
+        SCREEN_MUSIC_PLAYLIST,
+        SCREEN_MAPS
     };
 
     static void Main(string[] args)
@@ -81,6 +82,11 @@ class Program
 
                 case SCREEN_STATE.SCREEN_HOME:
                     nextScreen = new HomeScreen();
+                    break;
+
+
+                case SCREEN_STATE.SCREEN_NOTES_EDITOR:
+                    nextScreen = new NotesScreen();
                     break;
 
                 default:

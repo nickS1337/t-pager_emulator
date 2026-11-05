@@ -13,14 +13,15 @@ abstract class Screen
     private String _UITitle;
 
     private TitleTop _TitleTop;
-    private ControlOptions _ControlOptions;
+    public ControlOptions _ControlOptions;
     private List<UIElement> _UIElements;
     //private ListMenu _ListMenu;
 
     //Keep track of where new elements should be positioned,
-    //starting at:
+    //starting at (aka the x and y offset for drawing elements):
     private int _ElementInitX = 20;
     private int _ElementInitY = 30;
+    private Color _ScreenColor;
 
     //UI_ELEMENT is used to identify different types of UIs
     public enum UI_ELEMENT
@@ -28,7 +29,10 @@ abstract class Screen
         UI_LISTMENU,
         UI_TABLE,
         UI_NOTES,
+        UI_NOTES_TITLE,
+        UI_NOTES_LINE,
         UI_CONTROLOPTIONS,
+        UI_MUSICSCRUBBER,
         UI_ELEMENT_NOT_SET
     }
 
@@ -38,9 +42,11 @@ abstract class Screen
         _UITitle = title;
 
         _UIElements = [];
+
+        _ScreenColor = Color.Black;
         
         //Set the background colour to black:
-        SplashKit.ClearScreen(Color.Black);
+        SplashKit.ClearScreen(_ScreenColor);
 
         _TitleTop = new TitleTop(title);
         _ControlOptions = new ControlOptions();
@@ -60,38 +66,49 @@ abstract class Screen
     {
         
         //Automatic positioning and stuff will go here
+        //This can be further simplified ******************
 
         UIElement item;
 
         switch (element)
         {
-            
             case UI_ELEMENT.UI_LISTMENU:
-            {
-
-                //Console.WriteLine("Requested new UI_LISTMENU in Screen " + UITitle);
                 item = new ListMenu();
-                item.ElementID = element_id;
-                item.X = _ElementInitX;
-                item.Y = _ElementInitY;
-                _UIElements.Add(item);
-                _ElementInitY += item.Height;
                 break;
-            }
 
             case UI_ELEMENT.UI_TABLE:
-            {
                 item = new Table();
-                item.ElementID = element_id;
-                item.X = _ElementInitX;
-                item.Y = _ElementInitY;
-                _UIElements.Add(item);
-                _ElementInitY += item.Height;
                 break;
-            }
 
+            case UI_ELEMENT.UI_MUSICSCRUBBER:
+                item = new MusicScrubber();
+                break;
+
+            case UI_ELEMENT.UI_NOTES_TITLE:
+                item = new NotesEditorTitle();
+                break;
+
+            case UI_ELEMENT.UI_NOTES_LINE:
+                item = new NotesEditorLine();
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(element));
         }
 
+        item.ElementID = element_id;
+        item.X = OffsetX;
+        item.Y = OffsetY;
+
+        _UIElements.Add(item);
+        _ElementInitY += item.Height;
+
+    }
+
+    public Color ScreenColor
+    {
+        get { return _ScreenColor; }
+        set { _ScreenColor = value; }
     }
 
     public String UITitle
@@ -101,6 +118,18 @@ abstract class Screen
             _TitleTop.Title = value;
             _UITitle = value; 
         }
+    }
+
+    public int OffsetX
+    {
+        get { return _ElementInitX; }
+        set { _ElementInitX = value; }
+    }
+
+    public int OffsetY
+    {
+        get { return _ElementInitY; }
+        set { _ElementInitY = value; }
     }
 
     //Finds an existing UI element by its ID and returns it as the requested type
@@ -140,13 +169,13 @@ abstract class Screen
         _ControlOptions.DrawElement();
         //_ListMenu.DrawElement();
 
-        int elementX = _ElementInitX;
-        int elementY = _ElementInitY;
+        int elementX = OffsetX;
+        int elementY = OffsetY;
 
         for (int i = 0; i < _UIElements.Count; i++)
         {
 
-            Console.WriteLine("Drawing " + _UIElements[i].ElementID + " at Y:" + _UIElements[i].Y);
+            //Console.WriteLine("Drawing " + _UIElements[i].ElementID + " at Y:" + _UIElements[i].Y);
             _UIElements[i].Y = elementY;
             _UIElements[i].DrawElement();
 

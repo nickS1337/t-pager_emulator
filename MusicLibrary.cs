@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using SplashKitSDK;
@@ -8,6 +9,8 @@ class MusicLibrary : Screen
 {
 
     //private Table _Table;
+    //The table being focused
+    private String _FocusedTableID;
 
     public MusicLibrary()
     {
@@ -15,6 +18,14 @@ class MusicLibrary : Screen
         UITitle = "/HOME/MusicLibrary/";
         Console.WriteLine("Screen toggled to " + UITitle);
     
+        NewElement(UI_ELEMENT.UI_MUSICSCRUBBER, "MusicDetails");
+        
+        _FocusedTableID = "Playlists";
+
+        // Element<Table>("MusicDetails").SetHeaders(
+        //     new List<String>
+        // );
+
         NewElement(UI_ELEMENT.UI_TABLE, "Playlists");
 
         Element<Table>("Playlists").SetHeaders(
@@ -81,6 +92,8 @@ class MusicLibrary : Screen
     {
 
         Console.WriteLine("Received key: " + k);
+        Console.WriteLine(_FocusedTableID + ", CheckEndOfTable(-1):" + CheckEndOfTable(-1));
+        Console.WriteLine(_FocusedTableID + ", CheckEndOfTable(1):" + CheckEndOfTable(1));
 
         KeyCode key = (KeyCode)k;
         
@@ -89,13 +102,29 @@ class MusicLibrary : Screen
             
             case KeyCode.WKey:
             {
-                Element<Table>("Playlists").FocusPreviousElement();
+
+                if (CheckEndOfTable(-1))
+                {
+                    ToggleFocusedTable();
+                } else
+                {
+                    Element<Table>(_FocusedTableID).FocusPreviousElement();
+                }
+
                 break;
             }
 
             case KeyCode.SKey:
             {
-                Element<Table>("Playlists").FocusNextElement();
+
+                if (CheckEndOfTable(1))
+                {
+                    ToggleFocusedTable();
+                } else
+                {
+                    Element<Table>(_FocusedTableID).FocusNextElement();
+                }
+
                 break;
             }
 
@@ -112,6 +141,57 @@ class MusicLibrary : Screen
                 break;
             }
 
+        }
+
+        //Check if the current position of any of the tables was reset:
+        // if (Element<Table>("Playlists").)
+        // {
+            
+        // }
+
+    }
+
+    public bool CheckEndOfTable(int x)
+    {
+
+        //Check if increasing or decreasing the table by x will reset the position
+        //i.e. from the start of the list to the end of the list
+        //OR from the end of the list to the start of the list
+
+        Table table = Element<Table>(_FocusedTableID);
+
+        //Console.WriteLine("table.SelectedItem: "+table.SelectedItem + " + x:" +x +" = " + (table.SelectedItem + x));
+
+        if (
+            (table.SelectedItem + x) >= table.RowCount || 
+            (table.SelectedItem + x) < 0
+        )
+        {
+            //ToggleFocusedTable();
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public void ToggleFocusedTable()
+    {
+        
+        //Invert the active table.
+        //So if Playlists is active, the focused table will be Library
+        //if Library, then Playlists is active
+
+        if (_FocusedTableID == "Playlists")
+        {
+            Element<Table>("Playlists").Focused = false;
+            Element<Table>("Library").Focused = true;
+            _FocusedTableID = "Library";
+        } else
+        {
+            Element<Table>("Playlists").Focused = true;
+            Element<Table>("Library").Focused = false;  
+            _FocusedTableID = "Playlists";
         }
 
     }

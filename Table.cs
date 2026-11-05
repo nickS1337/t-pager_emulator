@@ -23,6 +23,7 @@ class Table : UIElement
 
     //The actual column widths. This is what will be used when actually drawing each row column:
     private List<int> _ActualColumnWidths;
+    private Color _HeaderColor;
 
     private int RowHeight;
 
@@ -48,8 +49,15 @@ class Table : UIElement
         _MenuFocused = false;
         _SelectedItem = 0;
 
+        _HeaderColor = Color.MidnightBlue;
+
         //SetHeaders(headers);
         
+    }
+
+    public Color HeaderColor {
+        get { return _HeaderColor; }
+        set { _HeaderColor = value; }
     }
 
     public bool Focused
@@ -58,26 +66,135 @@ class Table : UIElement
         set { _MenuFocused = value; }
     }
 
+    private void UpdateColumnWidths()
+    {
+        //Rules for this:
+        /**
+            A. Where possible, all columns except the last column
+            must take up their preferred width.
+            B. The last column must take up the remaining space.
+            C. The last column must have a width no smaller than
+            the textwidth of its header text, including padding.
+        */
+
+        _ActualColumnWidths.Clear();
+
+        if (_TableHeaders.Count == 0)
+        {
+            return;
+        }
+
+        int lastColumn = _TableHeaders.Count - 1;
+
+        //Reserve enough space for the final header
+        int lastMinimumWidth =
+            SplashKit.TextWidth(
+                _TableHeaders[lastColumn].ToUpper(),
+                FontName,
+                TextSize
+            ) + TextPadding * 2;
+
+        if (lastMinimumWidth > Width)
+        {
+            throw new InvalidOperationException(
+                "The final column header is wider than the table."
+            );
+        }
+
+        int totalColumnWidths = 0;
+
+        //Add the preferred widths of all columns except the last
+        for (int i = 0; i < lastColumn; i++)
+        {
+            totalColumnWidths += _ColumnWidths[i];
+        }
+
+        //Shrink earlier columns only if necessary.
+        int availableWidth = Width - lastMinimumWidth;
+
+        double scale = 1.0;
+
+        if (totalColumnWidths > availableWidth)
+        {
+            scale = (double)availableWidth / totalColumnWidths;
+        }
+
+        int usedWidth = 0;
+
+        for (int i = 0; i < lastColumn; i++)
+        {
+            int columnWidth = (int)(_ColumnWidths[i] * scale);
+
+            _ActualColumnWidths.Add(columnWidth);
+            usedWidth += columnWidth;
+        }
+
+        //Final column fills the remaining space.
+        _ActualColumnWidths.Add(Width - usedWidth);
+    }
+
     public void SetHeaders(List<String> headers)
     {
         
         //Set the table headers only if:
         //There are no rows yet
 
-        if (_RowContents.Count == 0)
+        /*if (_RowContents.Count == 0)
         {
+            
             _TableHeaders = ["No.", .. headers];
+
+            //Temporary column widths
             List <int> cw = [];
+            
             cw.Add(SplashKit.TextWidth("No.", FontName, TextSize));
             for (int i = 0; i < headers.Count; i++)
             {
-                cw.Add(SplashKit.TextWidth(headers[i], FontName, TextSize));
+                cw.Add(SplashKit.TextWidth(headers[i], FontName, TextSize) + TextPadding * 2);
             }
+
+            //Set _ColumnWidths = temporary column widths
             _ColumnWidths = cw;
         }
 
-        Height += RowHeight;
+        Height += RowHeight;*/
+
+        if (_RowContents.Count == 0)
+        {
+            _TableHeaders = ["No.", .. headers];
+
+            //Temporary column widths
+            List<int> cw = [];
+
+            for (int i = 0; i < _TableHeaders.Count; i++)
+            {
+                cw.Add(
+                    SplashKit.TextWidth(
+                        _TableHeaders[i].ToUpper(),
+                        FontName,
+                        TextSize
+                    ) + TextPadding * 2
+                );
+            }
+
+            //Set _ColumnWidths = temporary column widths
+            _ColumnWidths = cw;
+
+            UpdateColumnWidths();
+            Height = RowHeight;
+        }
         
+    }
+
+    public int SelectedItem
+    {
+        get { return _SelectedItem; }
+        set { _SelectedItem = value; }
+    }
+
+    public int RowCount
+    {
+        get { return _RowContents.Count; }
     }
 
     public void AddRow(List<String> row)
@@ -89,7 +206,7 @@ class Table : UIElement
         //A. There are no table headers
         //B. Row length is not equal to the total number of table headers
 
-        //Insert the row count:
+        //Insert the row count: 
         row.Insert(0, _RowContents.Count.ToString());
    
         bool bool1 = row.Count == _TableHeaders.Count;
@@ -99,28 +216,99 @@ class Table : UIElement
         if (bool1 && bool2)
         {
 
-            
+            //int totalColumnWidths = 0;
 
             //Compare each row item textwidth to all items in _ColumnWidths:
             for (int i = 0; i < row.Count; i++)
             {
+
+                //Rules for this:
+                /*
+                A. Where possible, all columns except the last row must take up the prescribed with of each row
+                B. The last column of each row must take up the remaining space of all other rows
+                C. The last column of each row must have a width no smaller than the textwidth of the header text
+                */ 
+
+                int textWidth = SplashKit.TextWidth(row[i] + "A", FontName, TextSize);
+                _ColumnWidths[i] = Math.Max(_ColumnWidths[i], textWidth);
                 
-                if (_ColumnWidths.Count == 0)
-                {
+                // if (_ColumnWidths.Count == 0)
+                // {
                     
-                    _ColumnWidths[i] = SplashKit.TextWidth(row[i], FontName, TextSize);
+                //     _ColumnWidths[i] = textWidth;
 
-                } else
-                {
+                // } else
+                // {
                     
-                    if (_ColumnWidths[i] < row[i].Length)
-                    {
-                        _ColumnWidths[i] = row[i].Length;
-                    }
+                //     if (_ColumnWidths[i] < textWidth)
+                //     {
+                       
+                //         // totalColumnWidths += totalColumnWidths;
+                //         //_ColumnWidths[i] = SplashKit.TextWidth(row[i] + "A", FontName, TextSize);
+                    
+                //         //If this is the last iteration:
+                //        /* if (i == row.Count - 1)
+                //         {
+                            
+                //             _ColumnWidths[i] = Width - columnWidth;
 
-                }
+                //         } else
+                //         {
+                //             _ColumnWidths[i] = columnWidth; //SplashKit.TextWidth(row[i] + "A", FontName, TextSize);
+                //             totalColumnWidths += columnWidth;
+                //         }*/
+
+                //     }
+
+                // }
 
             }
+
+            _ActualColumnWidths.Clear();
+
+            int lastColumn = _TableHeaders.Count - 1;
+
+            //Reserve enough space for the final header
+            int lastMinimumWidth =
+                SplashKit.TextWidth(
+                    _TableHeaders[lastColumn].ToUpper(),
+                    FontName,
+                    TextSize
+                ) + TextPadding * 2;
+
+            if (lastMinimumWidth > Width)
+            {
+                throw new InvalidOperationException(
+                    "The final column header is wider than the table."
+                );
+            }
+
+            int totalColumnWidths = 0;
+
+            for (int i = 0; i < lastColumn; i++)
+            {
+                totalColumnWidths += _ColumnWidths[i];
+            }
+
+            //Shrink earlier columns only if necessary.
+            int availableWidth = Width - lastMinimumWidth;
+
+            double scale = totalColumnWidths > availableWidth
+                ? (double)availableWidth / totalColumnWidths
+                : 1.0;
+
+            int usedWidth = 0;
+
+            for (int i = 0; i < lastColumn; i++)
+            {
+                int columnWidth = (int)(_ColumnWidths[i] * scale);
+
+                _ActualColumnWidths.Add(columnWidth);
+                usedWidth += columnWidth;
+            }
+
+            // Final column fills the remaining space.
+            _ActualColumnWidths.Add(Width - usedWidth);
 
             _RowContents.Add(row);
             Height += RowHeight;
@@ -162,6 +350,7 @@ class Table : UIElement
     {
 
         //TODO HERE: split the drawing of the header and rows into seperate methods
+        
 
         if (_TableHeaders.Count == 0)
         {
@@ -170,7 +359,7 @@ class Table : UIElement
 
         //For now, just perfectly divide the widths of all the columns into the number of total
         //headers there are
-        int ColumnWidth = Width / _TableHeaders.Count;
+        //int ColumnWidth = Width / _TableHeaders.Count;
 
         //First draw the table headers:
         SplashKit.FillRectangle(
@@ -182,15 +371,22 @@ class Table : UIElement
         );
 
         //Then draw each individual table header text:
+        int headerX = X;
         for (int i = 0; i < _TableHeaders.Count; i++)
         {
+
             SplashKit.DrawText(
                 _TableHeaders[i].ToUpper(), 
                 Color.White, 
                 FontName, 
                 TextSize, 
-                X + (i * ColumnWidth), 
-            Y);
+               // X + (i * ColumnWidth), 
+               headerX + TextPadding,
+               Y
+            );  
+
+            headerX += _ActualColumnWidths[i];
+
         }
         
         //Then lastly, each individual row
@@ -215,6 +411,9 @@ class Table : UIElement
                 RowHeight
             );
 
+            //Start drawing each row at the table's left edge
+            int cellX = X;
+
             for (int j = 0; j < row.Count; j++)
             {
                 SplashKit.DrawText(
@@ -222,9 +421,12 @@ class Table : UIElement
                     rowTextColor,
                     FontName,
                     TextSize,
-                    X + (j * ColumnWidth),
-                    Y + ((i + 1) * RowHeight)
+                    cellX + TextPadding,
+                    rowY
                 );
+
+                //Move to the next column
+                cellX += _ActualColumnWidths[j];
             }
 
         }
